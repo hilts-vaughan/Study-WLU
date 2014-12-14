@@ -17,6 +17,28 @@ services.service('DateService', function() {
 		var codes = ['X', 'M', 'T', 'W', 'R', 'F', 'X'];
 		return codes[currentDate.getDay()];
      };
+});
+
+
+services.service('LaurierService', function() {
+
+	/*
+		Returns an array of classrooms that are available throughout Laurier.
+
+		@Returns 	An array of strings of the name of the buildings
+	 */
+	this.getRooms = function() {
+		return [
+		'Bricker Academic Building',
+		'Dr. Alvin Woods Building',
+		'Science Building',
+		'Arts Building',
+		'Schlegel Centre',
+		'202 Regina Street',
+		'Peters Building',
+		'Seminary'
+		];
+	}
 
 
 });

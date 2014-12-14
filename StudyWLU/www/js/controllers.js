@@ -44,25 +44,18 @@ angular.module('starter.controllers', ['starter.services'])
   ];
 })
 
-.controller('AvailabilityController', function($scope, $http, $timeout, DateService) {
+.controller('AvailabilityController', function($scope, $http, $timeout, DateService, LaurierService) {
 
- // Setup our selector data
 
- $scope.rooms = [
-      {name:'Bricker Academic Building'},
-      {name: 'Dr. Alvin Woods Building'},
-      {name: 'Science Building'},
-      {name: 'Arts Building'},
-      {name: 'Schlegel Centre'},
-      {name: '202 Regina Street'},
-      {name: 'Peters Building'},
-      {name: 'Seminary'}
-  ];
-
+   // Pull in a list of rooms from our laurier service
+   $scope.rooms = [];
+   _.each(LaurierService.getRooms(), function(item) {
+      $scope.rooms.push({name: item});
+   })
 
   $scope.inputs = {};
   $scope.inputs.searchText = "N3028";
-  $scope.inputs.selectedRoom = $scope.rooms[2];
+  $scope.inputs.selectedRoom = $scope.rooms[0];
 
   $scope.getResults = function() {
     $scope.pending = true;
@@ -204,5 +197,17 @@ angular.module('starter.controllers', ['starter.services'])
 
 })
 
-.controller('PlaylistCtrl', function($scope, $stateParams) {
+.controller('SearchController', function($scope, LaurierService) {
+
+     // Pull in a list of rooms from our laurier service
+   $scope.rooms = [];
+   _.each(LaurierService.getRooms(), function(item) {
+      $scope.rooms.push({name: item});
+   })
+
+   $scope.inputs = {};
+   $scope.inputs.selectedRoom = null;
+
+
+
 });

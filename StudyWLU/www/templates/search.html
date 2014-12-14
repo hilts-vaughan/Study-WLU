@@ -2,8 +2,43 @@
   <ion-nav-buttons side="left">
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
-  <ion-content class="has-header">
-    <ion-content>
-      <h1>Search</h1>
+  <ion-content padding="true">
+      
+
+      <p>We'll just need a few pieces of information before we can find you the perfect room...</p>
+	  <div class="list" style="margin-top: 20px;">
+	  <form>
+
+
+
+	  <label class="item item-input item-stacked-label">
+	    <span class="input-label">Date</span>
+	    <input type="datetime-local" name="bdaytime">
+	    <p>What day are you interested in a room?</p>
+	  </label>
+
+	  <label class="item item-input item-stacked-label">
+	    <span class="input-label">How long?</span>
+	    <input type="number" name="bdaytime">
+	    <p>The amount of time you require in minutes</p>
+	  </label>
+
+
+	  <label class="item item-input item-stacked-label">
+	    <span class="input-label">Building</span>
+	    <div>
+	    <select style="width: 95%; margin: 0 auto; margin-top: 10px;" ng-change="clearText()"  ng-model="inputs.selectedRoom" ng-options="room.name for room in rooms">
+	   		<option value="">No preference</option>
+	    </select>
+		</div>
+		<p>If you have a building preference, please one.</p>
+	  </label>
+	  
+	 </form>
+	</div>
+
+
+
+
     </ion-content>
 </ion-view>
