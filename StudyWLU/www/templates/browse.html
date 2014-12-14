@@ -27,6 +27,7 @@
 
 	<div class="list card" ng-hide="!timetable">
 		
+		<b ng-if="timetable.length == 0">No results are available for this room. It might be the weekend or the room is not correctly inputted.</b>
 
 		<div class="item" ng-repeat="time in timetable">
 			<h2>{{time.start | date: 'h:mma'}} to {{ (time.end || 'closing')  | date: 'h:mma'}}</h2>

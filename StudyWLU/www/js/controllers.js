@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['starter.services'])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
   // Form data for the login modal
@@ -44,7 +44,7 @@ angular.module('starter.controllers', [])
   ];
 })
 
-.controller('AvailabilityController', function($scope, $http, $timeout) {
+.controller('AvailabilityController', function($scope, $http, $timeout, DateService) {
 
  // Setup our selector data
 
@@ -99,9 +99,11 @@ angular.module('starter.controllers', [])
 
     // Remove all mondays
     $scope.results = _.reject($scope.results, function(course) { 
-        return course.days.indexOf("F") == -1; 
+        return course.days.indexOf(DateService.getDateCode()) == -1; 
     });
 
+    if($scope.results.length == 0)
+      $scope.timetable = [];
 
     $scope.results.sort(function(a,b){
       // Turn your strings into dates, and then subtract them
