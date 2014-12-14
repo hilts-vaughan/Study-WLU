@@ -28,16 +28,34 @@
 	    <span class="input-label">Building</span>
 	    <div>
 	    <select style="width: 95%; margin: 0 auto; margin-top: 10px;" ng-change="clearText()"  ng-model="inputs.selectedRoom" ng-options="room.name for room in rooms">
-	   		<option value="">No preference</option>
 	    </select>
 		</div>
-		<p>If you have a building preference, please one.</p>
+		<p>If you have a building preference, please select one.</p>
 	  </label>
 	  
 	 </form>
 	</div>
 
 
+	<b ng-if="timetable.length == 0">{{error}}</b>
+
+	<div class="list card" ng-hide="!timetable" ng-repeat="building in timetable">
+
+		<div class="item item-divider dark">   
+			<h2>{{building.name}}</h2>
+  		</div>
+
+		<div class="item" ng-repeat="time in building.times">
+			<h2>{{time.start | date: 'h:mma'}} to {{ (time.end || 'closing')  | date: 'h:mma'}}</h2>
+			<p>This room is available {{getDifference(time.start, time.end)}}.</p>
+		</div>
+
+	</div>
+
+
+	<button class="button button-full button-positive" ng-hide="pending" ng-click="runSearch()">
+  		Search for rooms
+	</button>
 
 
     </ion-content>

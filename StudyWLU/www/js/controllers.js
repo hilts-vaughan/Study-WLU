@@ -117,7 +117,25 @@ angular.module('starter.controllers', ['starter.services'])
 
 })
 
-.controller('SearchController', function($scope, LaurierService) {
+.controller('SearchController', function($scope, LaurierService, ServerService, RoomService, DateService) {
+
+
+  $scope.getDifference = function(start, end) {
+
+    if(!end) {
+      return "until closing";
+    }
+
+    var delta = new Date(new Date(end) - new Date(start));
+    console.log(delta);
+    var seconds = delta.getTime() / 1000;
+    hours = Math.floor(seconds / 3600);
+    seconds %= 3600;
+    minutes = Math.floor(seconds / 60);
+
+    return "for " + hours + " hours, " + minutes + " minutes";
+
+  }
 
      // Pull in a list of rooms from our laurier service
    $scope.rooms = [];
@@ -126,10 +144,21 @@ angular.module('starter.controllers', ['starter.services'])
    })
 
    $scope.inputs = {};
-   $scope.inputs.selectedRoom = null;
+   $scope.inputs.selectedRoom = $scope.rooms[0];
    $scope.inputs.date = new Date();
    $scope.inputs.minutes = 60;
 
+   $scope.runSearch = function() {
+
+      ServerService.getRoomsInAndFilterByDay($scope.inputs.selectedRoom.name, DateService.getDateCode($scope.inputs.date), function(data) {
+          
+          // Got the data
+          var filteredRooms = RoomService.getRoomsWithFreeTime(data, $scope.inputs.minutes);
+          $scope.timetable = filteredRooms;
+
+      });
+
+   };
 
 
 });

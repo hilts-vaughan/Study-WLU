@@ -11,9 +11,9 @@ services.service('DateService', function() {
 
 		@returns A date code that represents the current day of the week
 	 */
-    this.getDateCode = function() {
-        return "R";
-        var currentDate = new Date();
+    this.getDateCode = function(date) {
+        return "W";
+        var currentDate = date || new Date();
         var codes = ['X', 'M', 'T', 'W', 'R', 'F', 'X'];
         return codes[currentDate.getDay()];
     };
@@ -66,11 +66,15 @@ services.service('ServerService', function($http) {
 
 		this.getRoomsIn(building, function(data) {
 
-	      data = _.reject(data, function(course) { 
-	          return course.days.indexOf(dayCode == -1); 
-	      });
+            console.log(data);
+            console.log(dayCode);
+	       
+            var set = _.reject(data, function(course) { 
+	          return course.days.indexOf(dayCode) == -1;
+            });
 
-	     	callback(data);
+            callback(set);
+	     
 		});
 	}
 
