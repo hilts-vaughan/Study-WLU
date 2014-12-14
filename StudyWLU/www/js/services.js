@@ -9,7 +9,7 @@ services.service('DateService', function() {
 		@returns A date code that represents the current day of the week
 	 */
     this.getDateCode = function() {
-    	return "F";
+    	return "W";
 		var currentDate = new Date();
 		var codes = ['X', 'M', 'T', 'W', 'R', 'F', 'X'];
 		return codes[currentDate.getDay()];

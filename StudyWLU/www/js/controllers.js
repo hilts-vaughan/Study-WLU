@@ -55,12 +55,14 @@ angular.module('starter.controllers', ['starter.services'])
       {name: 'Arts Building'}
   ];
 
-  $scope.selectedRoom = $scope.rooms[2];
-  $scope.searchText = "N3028";
+
+  $scope.inputs = {};
+  $scope.inputs.searchText = "N3028";
+  $scope.inputs.selectedRoom = $scope.rooms[2];
 
   $scope.getResults = function() {
     $scope.pending = true;
-    $http.get('http://localhost:1337/courses?building=' + $scope.selectedRoom.name + " " + $scope.searchText).
+    $http.get('http://localhost:1337/courses?building=' + $scope.inputs.selectedRoom.name + " " + $scope.inputs.searchText).
       success(function(data, status, headers, config) {
         $scope.results = data;
 
@@ -70,12 +72,11 @@ angular.module('starter.controllers', ['starter.services'])
           $scope.pending = false;
         }, 500);
         
-
-
         // Attempt to process the results in some sort of reasonable manner
         $scope.processResults();
 
       });
+
   };
 
   $scope.getDifference = function(start, end) {
@@ -95,15 +96,34 @@ angular.module('starter.controllers', ['starter.services'])
 
   }
 
+  $scope.clearText = function() {
+    $scope.inputs.searchText = "";
+  }
+
   $scope.processResults = function() {
+
+      if($scope.results.length == 0) {
+        $scope.timetable = [];
+        $scope.error = "That room does not seem to be valid.";
+        return;
+      }
+        
 
     // Remove all mondays
     $scope.results = _.reject($scope.results, function(course) { 
         return course.days.indexOf(DateService.getDateCode()) == -1; 
     });
 
-    if($scope.results.length == 0)
-      $scope.timetable = [];
+
+      if($scope.results.length == 0) {
+        $scope.timetable = [];
+        $scope.error = "It seems there's no classes in this room today. Free all day!";
+        return;
+      }
+    
+    // Filtered by day, how about grouping?
+    var grouped = _.groupBy($scope.results, 'building');
+
 
     $scope.results.sort(function(a,b){
       // Turn your strings into dates, and then subtract them
@@ -165,6 +185,7 @@ angular.module('starter.controllers', ['starter.services'])
 
     console.log(timetable);
     $scope.timetable = timetable;
+
 
   };
 

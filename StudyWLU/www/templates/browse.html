@@ -7,11 +7,12 @@
   	<div>Just fill in a few details below about your room; we'll check if it's available for you as fast as we can!</div>
 
 	  <div class="list" style="margin-top: 20px;">
+	  <form>
 	  <label class="item item-input item-stacked-label">
 	    <span class="input-label">Building</span>
 
 	    <div>
-	    <select style="width: 95%; margin: 0 auto; margin-top: 10px;"  ng-model="selectedRoom" ng-options="room.name for room in rooms">
+	    <select style="width: 95%; margin: 0 auto; margin-top: 10px;" ng-change="clearText()"  ng-model="inputs.selectedRoom" ng-options="room.name for room in rooms">
 	    </select>
 		</div>
 
@@ -20,14 +21,15 @@
 
 	  <label class="item item-input item-stacked-label">
 	    <span class="input-label">Room Name</span>
-	    <input type="text" ng-model="searchText" value="BA210" placeholder="Start typing a name..."></input>
+	    <input type="text" name="input" ng-model="inputs.searchText" value="BA210" placeholder="Start typing a name..."></input>
 	  </label>
+	 </form>
 	</div>
 
 
 	<div class="list card" ng-hide="!timetable">
 		
-		<b ng-if="timetable.length == 0">No results are available for this room. It might be the weekend or the room is not correctly inputted.</b>
+		<b ng-if="timetable.length == 0">{{error}}</b>
 
 		<div class="item" ng-repeat="time in timetable">
 			<h2>{{time.start | date: 'h:mma'}} to {{ (time.end || 'closing')  | date: 'h:mma'}}</h2>
