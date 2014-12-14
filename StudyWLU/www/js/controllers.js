@@ -207,6 +207,8 @@ angular.module('starter.controllers', ['starter.services'])
 
    $scope.inputs = {};
    $scope.inputs.selectedRoom = null;
+   $scope.inputs.date = new Date();
+   $scope.inputs.minutes = 60;
 
 
 
