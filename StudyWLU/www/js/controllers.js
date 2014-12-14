@@ -52,7 +52,11 @@ angular.module('starter.controllers', ['starter.services'])
       {name:'Bricker Academic Building'},
       {name: 'Dr. Alvin Woods Building'},
       {name: 'Science Building'},
-      {name: 'Arts Building'}
+      {name: 'Arts Building'},
+      {name: 'Schlegel Centre'},
+      {name: '202 Regina Street'},
+      {name: 'Peters Building'},
+      {name: 'Seminary'}
   ];
 
 
