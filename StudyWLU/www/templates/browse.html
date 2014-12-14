@@ -27,11 +27,15 @@
 	</div>
 
 
-	<div class="list card" ng-hide="!timetable">
-		
-		<b ng-if="timetable.length == 0">{{error}}</b>
+	<b ng-if="timetable.length == 0">{{error}}</b>
 
-		<div class="item" ng-repeat="time in timetable">
+	<div class="list card" ng-hide="!timetable" ng-repeat="building in timetable">
+
+		<div class="item item-divider">   
+			<h2>{{building.name}}</h2>
+  		</div>
+
+		<div class="item" ng-repeat="time in building.times">
 			<h2>{{time.start | date: 'h:mma'}} to {{ (time.end || 'closing')  | date: 'h:mma'}}</h2>
 			<p>This room is available {{getDifference(time.start, time.end)}}.</p>
 		</div>

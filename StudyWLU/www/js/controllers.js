@@ -124,20 +124,25 @@ angular.module('starter.controllers', ['starter.services'])
     // Filtered by day, how about grouping?
     var grouped = _.groupBy($scope.results, 'building');
 
+    $scope.timetable = [];
 
-    $scope.results.sort(function(a,b){
-      // Turn your strings into dates, and then subtract them
-      // to get a value that is either negative, positive, or zero.
-      return new Date(a.times[0]) - new Date(b.times[0]);
-    });
+    _.each(_.pairs(grouped), function(value, key) {
 
-    console.log($scope.results);
+      value = value[1];
 
-    // Now that we're all sorted, we can find the largest streaks in which we're free
-    var currentStreakIndex = 0;
-    var timetable = [];
+      value.sort(function(a,b){
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new Date(a.times[0]) - new Date(b.times[0]);
+      });
 
-    var firstDate = new Date($scope.results[0].times[0]);
+    console.log(value);
+
+    var timetable = {};
+    timetable.name = value[0].building;
+    timetable.times = [];
+
+    var firstDate = new Date(value[0].times[0]);
     var morningDate = new Date(firstDate.getTime());
 
     morningDate.setSeconds(0);
@@ -152,13 +157,13 @@ angular.module('starter.controllers', ['starter.services'])
         end: firstDate
       }
 
-      timetable.push(entry);
+      timetable.times.push(entry);
     }
 
-    for(var i = 0; i < $scope.results.length - 1; i++) {
+    for(var i = 0; i < value.length - 1; i++) {
 
-      var course = $scope.results[i];
-      var nextCourse = $scope.results[i + 1];
+      var course = value[i];
+      var nextCourse = value[i + 1];
 
       // We get the amount of time that has ended since
       var endDelta = (new Date(nextCourse.times[0]) - new Date(course.times[1]) );
@@ -171,20 +176,23 @@ angular.module('starter.controllers', ['starter.services'])
           end: nextCourse.times[0]
         }
 
-        timetable.push(entry);
+        timetable.times.push(entry);
       }
     }
 
     // Of course, there's also a section from the last course to the end of the day
     var entry = {
-      start: $scope.results[$scope.results.length - 1].times[1],
+      start: value[value.length - 1].times[1],
       end: null
     }
 
-    timetable.push(entry);
+    timetable.times.push(entry);
 
     console.log(timetable);
-    $scope.timetable = timetable;
+    $scope.timetable.push(timetable);
+
+    });
+
 
 
   };
