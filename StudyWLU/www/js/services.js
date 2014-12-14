@@ -44,6 +44,39 @@ services.service('LaurierService', function() {
 
 });
 
+services.service('ServerService', function($http) {
+
+	// TODO
+	// 
+	// We should try to cache this; the data is unlikely to change.
+	// We could probably even download the whole thing at startup
+	// and then muck with it later
+
+	this.getRoomsIn = function(building, callback) {
+
+		// Make the GET request out and grab the data
+	    $http.get('http://localhost:1337/courses?building=' + building).
+	      success(function(data, status, headers, config) {
+	      	callback(data);
+	      });		
+
+	}
+
+	this.getRoomsInAndFilterByDay = function(building, dayCode, callback) {
+
+		this.getRoomsIn(building, function(data) {
+
+	      data = _.reject(data, function(course) { 
+	          return course.days.indexOf(dayCode == -1); 
+	      });
+
+	     	callback(data);
+		});
+	}
+
+
+
+})
 
 services.service('RoomService', function() {
 

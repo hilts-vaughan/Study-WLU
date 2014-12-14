@@ -33,18 +33,8 @@ angular.module('starter.controllers', ['starter.services'])
   };
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
 
-.controller('AvailabilityController', function($scope, $http, $timeout, DateService, LaurierService) {
+.controller('AvailabilityController', function($scope, $http, $timeout, DateService, LaurierService, RoomService, ServerService) {
 
 
    // Pull in a list of rooms from our laurier service
@@ -54,13 +44,14 @@ angular.module('starter.controllers', ['starter.services'])
    })
 
   $scope.inputs = {};
-  $scope.inputs.searchText = "N3028";
+  $scope.inputs.searchText = "BA20";
   $scope.inputs.selectedRoom = $scope.rooms[0];
 
   $scope.getResults = function() {
     $scope.pending = true;
-    $http.get('http://localhost:1337/courses?building=' + $scope.inputs.selectedRoom.name + " " + $scope.inputs.searchText).
-      success(function(data, status, headers, config) {
+
+    ServerService.getRoomsIn($scope.inputs.selectedRoom.name + " " + $scope.inputs.searchText,
+    function(data) {
         $scope.results = data;
 
         // Wait a few seconds until it can re-appear
@@ -106,10 +97,10 @@ angular.module('starter.controllers', ['starter.services'])
       }
         
 
-    // Remove all mondays
-    $scope.results = _.reject($scope.results, function(course) { 
-        return course.days.indexOf(DateService.getDateCode()) == -1; 
-    });
+      // Remove all mondays
+      $scope.results = _.reject($scope.results, function(course) { 
+          return course.days.indexOf(DateService.getDateCode()) == -1; 
+      });
 
 
       if($scope.results.length == 0) {
@@ -118,78 +109,7 @@ angular.module('starter.controllers', ['starter.services'])
         return;
       }
     
-    // Filtered by day, how about grouping?
-    var grouped = _.groupBy($scope.results, 'building');
-
-    $scope.timetable = [];
-
-    _.each(_.pairs(grouped), function(value, key) {
-
-      value = value[1];
-
-      value.sort(function(a,b){
-        // Turn your strings into dates, and then subtract them
-        // to get a value that is either negative, positive, or zero.
-        return new Date(a.times[0]) - new Date(b.times[0]);
-      });
-
-    console.log(value);
-
-    var timetable = {};
-    timetable.name = value[0].building;
-    timetable.times = [];
-
-    var firstDate = new Date(value[0].times[0]);
-    var morningDate = new Date(firstDate.getTime());
-
-    morningDate.setSeconds(0);
-    morningDate.setHours(8);
-    morningDate.setMinutes(30);
-
-    var firstDelta = (firstDate - morningDate);
-
-    if(firstDelta > 1000 * 60 * 30) {
-      var entry = {
-        start: morningDate.toISOString(),
-        end: firstDate
-      }
-
-      timetable.times.push(entry);
-    }
-
-    for(var i = 0; i < value.length - 1; i++) {
-
-      var course = value[i];
-      var nextCourse = value[i + 1];
-
-      // We get the amount of time that has ended since
-      var endDelta = (new Date(nextCourse.times[0]) - new Date(course.times[1]) );
-
-      // Next up, check if the gap is large enough
-      if(endDelta > 1000 * 60 * 15) {
-
-        var entry = {
-          start: course.times[1],
-          end: nextCourse.times[0]
-        }
-
-        timetable.times.push(entry);
-      }
-    }
-
-    // Of course, there's also a section from the last course to the end of the day
-    var entry = {
-      start: value[value.length - 1].times[1],
-      end: null
-    }
-
-    timetable.times.push(entry);
-
-    console.log(timetable);
-    $scope.timetable.push(timetable);
-
-    });
-
+      $scope.timetable = RoomService.getRoomsWithFreeTime($scope.results, 30);
 
 
   };
