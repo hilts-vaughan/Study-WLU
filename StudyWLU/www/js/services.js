@@ -33,13 +33,13 @@ services.service('DateService', function() {
                 var norm = Math.abs(Math.floor(num));
                 return (norm < 10 ? '0' : '') + norm;
             };
-        return now.getFullYear() 
+        return now.getFullYear()
             + '-' + pad(now.getMonth()+1)
             + '-' + pad(now.getDate())
             + 'T' + pad(now.getHours())
-            + ':' + pad(now.getMinutes()) 
-            + ':' + pad(now.getSeconds()) 
-            + dif + pad(tzo / 60) 
+            + ':' + pad(now.getMinutes())
+            + ':' + pad(now.getSeconds())
+            + dif + pad(tzo / 60)
             + ':' + pad(tzo % 60);
 
     };
@@ -74,9 +74,9 @@ services.service('LaurierService', function() {
 services.service('SettingsService', function() {
 
     this.getSettings = function() {
-   
+
         var settings =
-        [            
+        [
             {text: "Show availability length", key: "ShowLength"},
             {text: "Allow caching", key: "UseCaching"},
             {text: "Send diagnostic information", key: "UseDiagnostics"}
@@ -101,20 +101,20 @@ services.service('SettingsService', function() {
 services.service('ServerService', function($http) {
 
 	// TODO
-	// 
+	//
 	// We should try to cache this; the data is unlikely to change.
 	// We could probably even download the whole thing at startup
 	// and then muck with it later
 
-    var HOST = "192.168.1.160";
+    var HOST = "safe-thicket-1409.herokuapp.com";
 
 	this.getRoomsIn = function(building, callback) {
 
 		// Make the GET request out and grab the data
-	    $http.get('http://' + HOST + ':1337/courses?building=' + building).
+	    $http.get('https://' + HOST + '/courses?building=' + building).
 	      success(function(data, status, headers, config) {
 	      	callback(data);
-	      });		
+	      });
 
 	}
 
@@ -124,13 +124,13 @@ services.service('ServerService', function($http) {
 
             console.log(data);
             console.log(dayCode);
-	       
-            var set = _.reject(data, function(course) { 
+
+            var set = _.reject(data, function(course) {
 	          return course.days.indexOf(dayCode) == -1;
             });
 
             callback(set);
-	     
+
 		});
 	}
 
