@@ -22,7 +22,7 @@ angular.module('starter.controllers', ['starter.services'])
     })
 
     $scope.inputs = {};
-    $scope.inputs.searchText = "BA20";
+    $scope.inputs.searchText = "";
     $scope.inputs.selectedRoom = $scope.rooms[0];
 
     $scope.getResults = function() {
