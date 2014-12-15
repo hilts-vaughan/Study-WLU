@@ -6,6 +6,36 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers'])
 
+
+.config(function($httpProvider) {
+  $httpProvider.interceptors.push(function($rootScope) {
+    return {
+      request: function(config) {
+        $rootScope.$broadcast('loading:show')
+        return config
+      },
+      response: function(response) {
+        $rootScope.$broadcast('loading:hide')
+        return response
+      }
+    }
+  })
+})
+
+.run(function($rootScope, $ionicLoading, $timeout) {
+  $rootScope.$on('loading:show', function() {
+    $ionicLoading.show({template: 'Loading...'})
+  })
+
+  $rootScope.$on('loading:hide', function() {
+    $timeout(function() {
+      $ionicLoading.hide()
+    }, 100);
+    
+  })
+})
+
+
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -40,6 +70,17 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     }
   })
 
+
+  .state('app.about', {
+    url: "/about",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/about.html",
+        controller: "AboutController"
+      }
+    }
+  })
+
   .state('app.availability', {
     url: "/availability",
     views: {
@@ -49,25 +90,19 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     }
   })
-    .state('app.playlists', {
-      url: "/playlists",
+
+    .state('app.settings', {
+      url: "/settings",
       views: {
         'menuContent': {
-          templateUrl: "templates/playlists.html",
-          controller: 'PlaylistsCtrl'
+          templateUrl: "templates/settings.html",
+          controller: 'SettingsController'
         }
       }
     })
 
-  .state('app.single', {
-    url: "/playlists/:playlistId",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/playlist.html",
-        controller: 'PlaylistCtrl'
-      }
-    }
-  });
+
+;
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/availability');
 });

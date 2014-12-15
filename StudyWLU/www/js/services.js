@@ -12,10 +12,36 @@ services.service('DateService', function() {
 		@returns A date code that represents the current day of the week
 	 */
     this.getDateCode = function(date) {
-        return "W";
         var currentDate = date || new Date();
         var codes = ['X', 'M', 'T', 'W', 'R', 'F', 'X'];
-        return codes[currentDate.getDay()];
+        var day = currentDate.getDay();
+        return codes[day];
+    };
+
+    this.getDateCodeWithDate = function(date) {
+        var currentDate = new Date(Date.parse(date.replace("-", "/")));
+        var codes = ['X', 'M', 'T', 'W', 'R', 'F', 'X'];
+        return codes[currentDate.getUTCDay()];
+    };
+
+    this.getLocalDateString = function() {
+
+        var now = new Date(),
+            tzo = -now.getTimezoneOffset(),
+            dif = tzo >= 0 ? '+' : '-',
+            pad = function(num) {
+                var norm = Math.abs(Math.floor(num));
+                return (norm < 10 ? '0' : '') + norm;
+            };
+        return now.getFullYear() 
+            + '-' + pad(now.getMonth()+1)
+            + '-' + pad(now.getDate())
+            + 'T' + pad(now.getHours())
+            + ':' + pad(now.getMinutes()) 
+            + ':' + pad(now.getSeconds()) 
+            + dif + pad(tzo / 60) 
+            + ':' + pad(tzo % 60);
+
     };
 
 });
@@ -44,6 +70,34 @@ services.service('LaurierService', function() {
 
 });
 
+
+services.service('SettingsService', function() {
+
+    this.getSettings = function() {
+   
+        var settings =
+        [            
+            {text: "Show availability length", key: "ShowLength"},
+            {text: "Allow caching", key: "UseCaching"},
+            {text: "Send diagnostic information", key: "UseDiagnostics"}
+        ];
+
+        return settings;
+    };
+
+    this.setKey = function(key, value) {
+        localStorage[key] = value;
+    };
+
+    this.getKey = function(key) {
+        return localStorage[key];
+    };
+
+
+});
+
+
+
 services.service('ServerService', function($http) {
 
 	// TODO
@@ -52,10 +106,12 @@ services.service('ServerService', function($http) {
 	// We could probably even download the whole thing at startup
 	// and then muck with it later
 
+    var HOST = "192.168.1.160";
+
 	this.getRoomsIn = function(building, callback) {
 
 		// Make the GET request out and grab the data
-	    $http.get('http://localhost:1337/courses?building=' + building).
+	    $http.get('http://' + HOST + ':1337/courses?building=' + building).
 	      success(function(data, status, headers, config) {
 	      	callback(data);
 	      });		
