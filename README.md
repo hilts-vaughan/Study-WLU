@@ -23,6 +23,7 @@ Technology & Other
 
 Study@WLU uses the Ionic Framework, Cordova, AngularJS, and SASS to achieve a great multiplatform application.
 
-All the information is supplied by scraping the LORIS server using an API designed for the task. <a href"https://github.com/hilts-vaughan/wlu-loris-api">Check out the API!</a> 
+All the information is supplied by scraping the LORIS server using an API designed for the task. 
+You can check out the API: https://github.com/hilts-vaughan/wlu-loris-api
 
 If you think a similar application would be good for your school, fork me or feel free to setup an instance of the LORIS API for your own school if it's powered by a similar system.
